@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
     Avatar,
     Button,
-    Backdrop,
-    CircularProgress,
     Container,
     CssBaseline,
     Typography,
@@ -41,7 +39,6 @@ const Login = (props) => {
 
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
-    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
     const handleEmailChange = (event) => {
@@ -50,10 +47,6 @@ const Login = (props) => {
 
     const handlePasswordChange = (event) => {
         setPasswordField(event.target.value);
-    }
-
-    const handleClose = () => {
-        setLoading(false)
     }
 
     const handleLogin = () => {
@@ -70,7 +63,6 @@ const Login = (props) => {
 
         axios(config)
         .then(async (res) => {
-            setLoading(true)
             await localStorage.setItem('JWOT', res.data.data.token)
             props.history.push('/dashboard')
         })
@@ -122,9 +114,6 @@ const Login = (props) => {
                     Sign In
                 </Button>
             </div>
-            <Backdrop className={classes.backdrop} open={loading} onClick={handleClose}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </Container>
     )
 }
