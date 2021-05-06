@@ -36,6 +36,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 })
 
+const token = window.localStorage.getItem('JWOT')
+
 
 const Contact = (props) => {
     const classes = useStyles()
@@ -82,7 +84,7 @@ const Contact = (props) => {
             method: 'delete',
             url: `https://phone-book-api.herokuapp.com/api/v1/contacts/${id}`,
             headers: {
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhhcnJ5QGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiMjQ0NTE3MmIwZWYzZmFlOTdiYTM3OGE4ODBjMWQ5YWQiLCJpYXQiOjE2MjAyODM4MTksImV4cCI6MTYyMDM3MDIxOX0.rNBtLizm14DUHZffsO1iyCWyY9rXa1qRuUoO_B9g5Ng'
+                'Authorization': `Bearer ${token}`,
             },
             data: formData
         }

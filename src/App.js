@@ -1,51 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Container,
-} from '@material-ui/core'
+import React from 'react';
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
 
-// components
-import MenuBar from './components/navigations/MenuBar.components';
-import ContactList from './components/views/ContactList.components';
-import axios from 'axios';
+
+import PrivateRoute from './components/utils/PrivateRoute.components';
+import PublicRoute from './components/utils/PublicRoute.components';
+
+
+//Components
+import Dashboard from './components/views/Dashboard.components';
+import Login from './components/views/Login.components';
 
 
 const App = () => {
-  const [contacts, setContacts] = useState([])
-  const [search, setSearch] = useState('')
-
-  let filtered = contacts.sort((a,b) => {
-    if(a.name < b.name) {
-      return -1
-    }
-    if(a.name > b.name) {
-      return 1
-    }
-    return 0
-  }).filter((data) => {
-    return data.name.toLowerCase().includes(search.toLowerCase())
-  })
-  
-  useEffect(() => {
-    const config = {
-      method: 'get',
-      url: 'https://phone-book-api.herokuapp.com/api/v1/contacts',
-      headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhhcnJ5QGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiMjQ0NTE3MmIwZWYzZmFlOTdiYTM3OGE4ODBjMWQ5YWQiLCJpYXQiOjE2MjAyODM4MTksImV4cCI6MTYyMDM3MDIxOX0.rNBtLizm14DUHZffsO1iyCWyY9rXa1qRuUoO_B9g5Ng',
-      },
-    };
-    axios(config)
-    .then(res => setContacts(res.data.data))
-    .catch(err => console.log(err))
-  })
-
 
   return (
-    <Container maxWidth='sm'>
-      <MenuBar setSearch={setSearch} />
-      <ContactList list={filtered} />
-    </Container>
+    <Router>
+      <Switch>
+        <PublicRoute exact path={['/', '/login']}  component={Login} />
+        <PrivateRoute path='/dashboard'  component={Dashboard} />
+      </Switch>
+    </Router>
   )
 }
 
 export default App
-

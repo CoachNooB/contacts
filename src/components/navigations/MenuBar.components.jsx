@@ -1,14 +1,17 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import { makeStyles, fade } from '@material-ui/core/styles'
 import {
     AppBar,
     InputBase,
+    IconButton,
     Toolbar,
-    Typography
+    Typography,
 } from '@material-ui/core'
 import {
     ContactMail,
     Search,
+    PowerSettingsNewRounded,
 } from '@material-ui/icons'
 
 
@@ -66,13 +69,22 @@ const useStyles = makeStyles((theme) => ({
             },
         },
     },
+    logoutButton: {
+        marginLeft: 20,
+    }
 }));
 
-const MenuBar = ({setSearch}) => {
+const MenuBar = (props) => {
     const classes= useStyles()
+    const { setSearch } = props
     
     const handleSearch = (e) => {
         setSearch(e.target.value)
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('JWOT')
+        props.history.push('/')
     }
 
     return (
@@ -96,9 +108,19 @@ const MenuBar = ({setSearch}) => {
                         onChange={e => handleSearch(e)}
                     />
                 </div>
+                <IconButton
+                    className={classes.logoutButton}
+                    edge="end"
+                    aria-label="logout"
+                    aria-haspopup="true"
+                    onClick={handleLogout}
+                    color="inherit"
+                >
+                    <PowerSettingsNewRounded />
+                </IconButton>
             </Toolbar>
         </AppBar>
     )
 }
 
-export default MenuBar
+export default withRouter(MenuBar)
