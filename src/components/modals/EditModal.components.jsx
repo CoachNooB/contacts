@@ -5,7 +5,6 @@ import {
     DialogActions,
     DialogTitle,
     DialogContent,
-    Fab,
     Grid,
     makeStyles,
     Slide,
@@ -14,7 +13,6 @@ import {
     SnackbarContent,
 } from '@material-ui/core'
 import { 
-    Add, 
     FaceRounded,
     PhoneRounded,
     WorkRounded,
@@ -44,34 +42,35 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
     })
 
-const AddModal = () => {
+const EditModal = (props) => {
+    const { id, name, setName, phone, setPhone, job, setJob, company, setCompany, email, setEmail, image, setImage} = props
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
     const [snack, setSnack] = React.useState(false)
 
 
-    const [name, setName] = React.useState('')
-    const [phone, setPhone] = React.useState('')
-    const [job, setJob] = React.useState('')
-    const [company, setCompany] = React.useState('')
-    const [email, setEmail] = React.useState('')
-    const [image, setImage] = React.useState(null)
+    const [newName, setNewName] = React.useState(name)
+    const [newPhone, setNewPhone] = React.useState(phone)
+    const [newJob, setNewJob] = React.useState(job)
+    const [newCompany, setNewCompany] = React.useState(company)
+    const [newEmail, setNewEmail] = React.useState(email)
+    const [newImage, setNewImage] = React.useState(image)
     const [error, setError] = React.useState('')
 
     const handleNameChange = (e) => {
-        setName(e.target.value)
+        setNewName(e.target.value)
     }
     const handlePhoneChange = (e) => {
-        setPhone(e.target.value)
+        setNewPhone(e.target.value)
     }
     const handleJobChange = (e) => {
-        setJob(e.target.value)
+        setNewJob(e.target.value)
     }
     const handleCompanyChange = (e) => {
-        setCompany(e.target.value)
+        setNewCompany(e.target.value)
     }
     const handleEmailChange = (e) => {
-        setEmail(e.target.value)
+        setNewEmail(e.target.value)
     }
     
     const handleClickOpen = () => {
@@ -87,34 +86,30 @@ const AddModal = () => {
     }
     
     const handleClose = () => {
-        setName('')
-        setPhone('')
-        setJob('')
-        setCompany('')
-        setEmail('')
-        setImage(null)
-        setError('')
-        document.getElementById('name').value = ''
-        document.getElementById('phone').value = ''
-        document.getElementById('job').value = ''
-        document.getElementById('company').value = ''
-        document.getElementById('email').value = ''
-        document.getElementById('image').value = ''
         setOpen(false);
     };
 
+    const renewDetail = () => {
+        setName(newName)
+        setPhone(newPhone)
+        setJob(newJob)
+        setCompany(newCompany)
+        setEmail(newEmail)
+        setImage(newImage)
+    }
+
     const handleSubmit = () => {
         const formData = new FormData()
-        formData.append('name', name)
-        formData.append('phone', phone)
-        formData.append('job', job)
-        formData.append('company', company)
-        formData.append('email', email)
-        formData.append('image', image)
+        formData.append('name', newName)
+        formData.append('phone', newPhone)
+        formData.append('job', newJob)
+        formData.append('company', newCompany)
+        formData.append('email', newEmail)
+        formData.append('image', newImage)
 
         const config = {
-            method: 'post',
-            url: 'https://phone-book-api.herokuapp.com/api/v1/contacts',
+            method: 'put',
+            url: `https://phone-book-api.herokuapp.com/api/v1/contacts/${id}`,
             headers: {
                 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhhcnJ5QGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiMjQ0NTE3MmIwZWYzZmFlOTdiYTM3OGE4ODBjMWQ5YWQiLCJpYXQiOjE2MjAyODM4MTksImV4cCI6MTYyMDM3MDIxOX0.rNBtLizm14DUHZffsO1iyCWyY9rXa1qRuUoO_B9g5Ng',
             },
@@ -123,7 +118,7 @@ const AddModal = () => {
 
         axios(config)
         .then((res) => {
-            console.log(res.data.message);
+            renewDetail()
             handleClose()
             openSnack()
         })
@@ -136,9 +131,9 @@ const AddModal = () => {
 
     return (
         <>
-            <Fab color='secondary' aria-label="add" className={classes.fabButton} onClick={handleClickOpen}>
-                <Add />
-            </Fab>
+            <Button onClick={handleClickOpen} color="primary">
+                Edit
+            </Button>
             <Dialog
                 open={open}
                 disableBackdropClick
@@ -150,14 +145,14 @@ const AddModal = () => {
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle id="alert-dialog-slide-title">{"Add New Contact"}</DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title">{"Edit Contact"}</DialogTitle>
                 <DialogContent className={classes.margin}>
                     <Grid container spacing={1} alignItems="flex-end">
                         <Grid item xs={2}>
                             <FaceRounded />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField error={!name?true:false} required id="name" label="Name" onChange={(e) => handleNameChange(e)} fullWidth/>
+                            <TextField error={!name?true:false} required name="name" label="Name" value={newName} onChange={(e) => handleNameChange(e)} fullWidth/>
                         </Grid>
                     </Grid>
                     <Grid container spacing={1} alignItems="flex-end">
@@ -165,7 +160,7 @@ const AddModal = () => {
                             <PhoneRounded />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField error={!phone?true:false} required id="phone" label="Phone Number" onChange={(e) => handlePhoneChange(e)} fullWidth/>
+                            <TextField error={!phone?true:false} required name="phone" label="Phone Number" value={newPhone} onChange={(e) => handlePhoneChange(e)} fullWidth/>
                         </Grid>
                     </Grid>
                     <Grid container spacing={1} alignItems="flex-end">
@@ -173,7 +168,7 @@ const AddModal = () => {
                             <WorkRounded />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField id="job" label="Job" onChange={(e) => handleJobChange(e)} fullWidth/>
+                            <TextField name="job" label="Job" value={newJob} onChange={(e) => handleJobChange(e)} fullWidth/>
                         </Grid>
                     </Grid>
                     <Grid container spacing={1} alignItems="flex-end">
@@ -181,7 +176,7 @@ const AddModal = () => {
                             <HomeWorkRounded />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField id="company" label="Company" onChange={(e) => handleCompanyChange(e)} fullWidth/>
+                            <TextField name="company" label="Company" value={newCompany} onChange={(e) => handleCompanyChange(e)} fullWidth/>
                         </Grid>
                     </Grid>
                     <Grid container spacing={1} alignItems="flex-end">
@@ -189,7 +184,7 @@ const AddModal = () => {
                             <AlternateEmailRounded />
                         </Grid>
                         <Grid item xs={10}>
-                            <TextField id="email" label="Email" onChange={(e) => handleEmailChange(e)} fullWidth/>
+                            <TextField name="email" label="Email" value={newEmail} onChange={(e) => handleEmailChange(e)} fullWidth/>
                         </Grid>
                     </Grid>
                     <Grid container spacing={1} alignItems="flex-end" className={classes.fileInput}>
@@ -197,7 +192,7 @@ const AddModal = () => {
                             <PhotoCameraRounded />
                         </Grid>
                         <Grid item xs={10}>
-                            <FileUpload id='image' onFileSelectSuccess={image => setImage(image)} onFileSelectError={({error}) => setError(error)} />
+                            <FileUpload name='image' onFileSelectSuccess={image => setNewImage(image)} onFileSelectError={({error}) => setError(error)} />
                         </Grid>
                     </Grid>
                 </DialogContent>
@@ -215,12 +210,12 @@ const AddModal = () => {
                 onClose={closeSnack}
                 TransitionComponent={Transition}
                 anchorOrigin={{vertical:'top', horizontal:'center'}}
-                autoHideDuration={2000}
+                autoHideDuration={4000}
             >
-                <SnackbarContent message='New Contact Added Succesfully !' style={{ backgroundColor: 'green' }} />
+                <SnackbarContent message='Contact Edited Succesfully !' style={{ backgroundColor: 'green' }} />
             </Snackbar>
         </>
     )
 }
 
-export default AddModal
+export default EditModal

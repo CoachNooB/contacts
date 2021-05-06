@@ -68,8 +68,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MenuBar = () => {
+const MenuBar = ({setSearch}) => {
     const classes= useStyles()
+    
+    const handleSearch = (e) => {
+        setSearch(e.target.value)
+    }
 
     return (
         <AppBar position="sticky" color="primary" className={classes.appBar}>
@@ -89,6 +93,7 @@ const MenuBar = () => {
                                     input: classes.inputInput,
                                 }}
                         inputProps={{ 'aria-label': 'search' }}
+                        onChange={e => handleSearch(e)}
                     />
                 </div>
             </Toolbar>
