@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import {
     Button,
     Dialog,
@@ -42,7 +43,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
     })
 
-const token = window.localStorage.getItem('JWOT')
+const token = localStorage.getItem('JWOT')
 
 const EditModal = (props) => {
     const { id, name, setName, phone, setPhone, job, setJob, company, setCompany, email, setEmail, image, setImage} = props
@@ -119,10 +120,11 @@ const EditModal = (props) => {
         }
 
         axios(config)
-        .then((res) => {
-            renewDetail()
-            handleClose()
-            openSnack()
+        .then(async (res) => {
+            await renewDetail()
+            await handleClose()
+            await openSnack()
+            props.history.push('/')
         })
         .catch(err => {
             setError(err.response.data)
@@ -220,4 +222,4 @@ const EditModal = (props) => {
     )
 }
 
-export default EditModal
+export default withRouter(EditModal)

@@ -39,7 +39,7 @@ const Dashboard = () => {
         axios(config)
         .then(res => setContacts(res.data.data))
         .catch(err => console.log(err))
-    })
+    },[])
 
     return (
         <Container maxWidth='sm'>

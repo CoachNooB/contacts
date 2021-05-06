@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import {
     Button,
     Dialog,
@@ -44,9 +45,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
     })
 
-const token = window.localStorage.getItem('JWOT')
+const token = localStorage.getItem('JWOT')
 
-const AddModal = () => {
+const AddModal = (props) => {
     const classes = useStyles()
     const [open, setOpen] = React.useState(false)
     const [snack, setSnack] = React.useState(false)
@@ -124,10 +125,11 @@ const AddModal = () => {
         }
 
         axios(config)
-        .then((res) => {
+        .then(async(res) => {
             console.log(res.data.message);
-            handleClose()
-            openSnack()
+            await handleClose()
+            await openSnack()
+            props.history.push('/')
         })
         .catch(err => {
             setError(err.response.data)
@@ -225,4 +227,4 @@ const AddModal = () => {
     )
 }
 
-export default AddModal
+export default withRouter(AddModal)

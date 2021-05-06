@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import {
     makeStyles,
     ListItem,
@@ -36,7 +37,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 })
 
-const token = window.localStorage.getItem('JWOT')
+const token = localStorage.getItem('JWOT')
 
 
 const Contact = (props) => {
@@ -94,6 +95,7 @@ const Contact = (props) => {
             console.log(res)
             delDialogClose()
             handleClose()
+            props.history.push('/')
         })
         .catch(err => console.log(err))
 
@@ -212,4 +214,4 @@ const Contact = (props) => {
     )
 }
 
-export default Contact
+export default withRouter(Contact)

@@ -64,7 +64,7 @@ const Login = (props) => {
         axios(config)
         .then(async (res) => {
             await localStorage.setItem('JWOT', res.data.data.token)
-            props.history.push('/dashboard')
+            props.history.push('/')
         })
         .catch((err) => {
             setError(err)

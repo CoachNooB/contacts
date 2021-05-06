@@ -82,9 +82,9 @@ const MenuBar = (props) => {
         setSearch(e.target.value)
     }
 
-    const handleLogout = () => {
-        localStorage.removeItem('JWOT')
-        props.history.push('/')
+    const handleLogout = async () => {
+        await localStorage.removeItem('JWOT')
+        props.history.push('/dashboard')
     }
 
     return (
