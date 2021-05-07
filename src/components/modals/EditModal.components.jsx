@@ -43,8 +43,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
     })
 
-const token = localStorage.getItem('JWOT')
-
 const EditModal = (props) => {
     const { id, name, setName, phone, setPhone, job, setJob, company, setCompany, email, setEmail, image, setImage} = props
     const classes = useStyles()
@@ -102,6 +100,7 @@ const EditModal = (props) => {
     }
 
     const handleSubmit = () => {
+        const token = localStorage.getItem('JWOT')
         const formData = new FormData()
         formData.append('name', newName)
         formData.append('phone', newPhone)

@@ -9,6 +9,7 @@ import PublicRoute from './components/utils/PublicRoute.components';
 //Components
 import Dashboard from './components/views/Dashboard.components';
 import Login from './components/views/Login.components';
+import Register from './components/views/Register.components';
 
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
     <Router>
       <Switch>
         <PublicRoute exact path={['/', '/login']}  component={Login} />
+        <PublicRoute path='/register'  component={Register} />
         <PrivateRoute path='/dashboard'  component={Dashboard} />
       </Switch>
     </Router>

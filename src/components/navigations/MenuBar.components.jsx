@@ -83,11 +83,12 @@ const MenuBar = (props) => {
     }
 
     const handleLogout = async () => {
-        await localStorage.removeItem('JWOT')
-        props.history.push('/dashboard')
+        await localStorage.removeItem('JWOT');
+        props.history.push('/dashboard');
     }
 
     return (
+        <>
         <AppBar position="sticky" color="primary" className={classes.appBar}>
             <Toolbar>
                 <ContactMail />
@@ -120,6 +121,7 @@ const MenuBar = (props) => {
                 </IconButton>
             </Toolbar>
         </AppBar>
+        </>
     )
 }
 

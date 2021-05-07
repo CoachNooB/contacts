@@ -7,9 +7,13 @@ import {
     CssBaseline,
     Typography,
     TextField,
+    DialogActions,
+    Slide,
+    Snackbar,
+    SnackbarContent,
 } from '@material-ui/core';
 import {
-    AccountBox,
+    ListAltRounded,
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios';
@@ -30,22 +34,30 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(3, 5, 2),
     },
-    signUp: {
+    cancel: {
         textDecoration: 'none',
-        color: theme.palette.secondary.dark,
+        color: 'white'
     }
 }));
 
-const Login = (props) => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+})
+
+const Register = (props) => {
     const classes = useStyles();
 
+    const [nameField, setNameField] = useState('');
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
     const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [snack, setSnack] = useState(false)
 
+    const handleNameChange = (event) => {
+        setNameField(event.target.value);
+    }
     const handleEmailChange = (event) => {
         setEmailField(event.target.value);
     }
@@ -54,30 +66,34 @@ const Login = (props) => {
         setPasswordField(event.target.value);
     }
 
-    const handleLogin = () => {
+    const handleRegister = () => {
         const data = {
+            'name': nameField,
             'email': emailField,
             'password': passwordField,
+            'confirmPassword': passwordField,
         }
 
         const config = {
             method: 'post',
-            url: 'https://phone-book-api.herokuapp.com/api/v1/signin',
+            url: 'https://phone-book-api.herokuapp.com/api/v1/signup',
             data: data,
         }
 
         axios(config)
         .then(async (res) => {
-            localStorage.setItem('JWOT', res.data.data.token)
-            setLoading(true)
-            setTimeout(() => {
-                props.history.push('/')
-            },2000)
+            await console.log(res.data.data.message)
+            await props.history.push('/')
         })
-        .catch((err) => {
-            setError(err)
-            console.log(error)
+        .catch(async (err) => {
+            await setError(err.response.data.data)
+            await setSnack(true)
         })
+
+    }
+
+    const closeSnack = () => {
+        setSnack(false)
     }
 
     return (
@@ -85,11 +101,21 @@ const Login = (props) => {
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                <AccountBox />
+                    <ListAltRounded />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                Sign in
+                Register
                 </Typography>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    name="name"
+                    onChange={(event) => handleNameChange(event)}
+                />
                 <TextField
                     variant="outlined"
                     margin="normal"
@@ -111,23 +137,35 @@ const Login = (props) => {
                     id="password"
                     onChange={(event) => handlePasswordChange(event)}
                 />
-                <Button
-                    fullWidth
-                    disabled={loading?true:false}
-                    type='submit'
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={handleLogin}
-                >
-                    Sign In
-                </Button>
-                <Typography>
-                    Do not have account? <Link to='/register' className={classes.signUp}>Sign up</Link>
-                </Typography>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.submit}
+                    >
+                        <Link to='/' className={classes.cancel}>Cancel</Link>
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                        onClick={handleRegister}
+                    >
+                        Register
+                    </Button>
+                </DialogActions>
             </div>
+            <Snackbar
+                open={snack}
+                onClose={closeSnack}
+                TransitionComponent={Transition}
+                anchorOrigin={{vertical:'top', horizontal:'center'}}
+                autoHideDuration={2000}
+            >
+                <SnackbarContent message={error} style={{ backgroundColor: '#d9534f' }} />
+            </Snackbar>
         </Container>
     )
 }
 
-export default withRouter(Login)
+export default withRouter(Register)

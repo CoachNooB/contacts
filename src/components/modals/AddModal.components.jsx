@@ -29,9 +29,10 @@ import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
     fabButton: {
         position: 'absolute',
-        top: 20,
-        right: 20,
-        margin: 'auto auto',
+        zIndex: 5,
+        top: 90,
+        right: 400,
+        margin: '0',
     },
     margin: {
         margin: theme.spacing(1),
@@ -44,8 +45,6 @@ const useStyles = makeStyles((theme) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
     })
-
-const token = localStorage.getItem('JWOT')
 
 const AddModal = (props) => {
     const classes = useStyles()
@@ -107,6 +106,7 @@ const AddModal = (props) => {
     };
 
     const handleSubmit = () => {
+        const token = localStorage.getItem('JWOT')
         const formData = new FormData()
         formData.append('name', name)
         formData.append('phone', phone)

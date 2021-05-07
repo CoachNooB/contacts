@@ -37,9 +37,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 })
 
-const token = localStorage.getItem('JWOT')
-
-
 const Contact = (props) => {
     const classes = useStyles()
     const { id, name, phone, job, company, email, avatar } = props
@@ -73,6 +70,7 @@ const Contact = (props) => {
     }
 
     const handleDelete = () => {
+        const token = localStorage.getItem('JWOT')
         const formData = new FormData();
         formData.append('name', name)
         formData.append('phone', phone)
